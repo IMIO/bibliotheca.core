@@ -23,6 +23,7 @@ setup(
         "Environment :: Web Environment",
         "Framework :: Plone",
         "Framework :: Plone :: 6.1",
+        "Framework :: Plone :: 6.2",
         "Framework :: Plone :: Addon",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.12",
