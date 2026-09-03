@@ -5,7 +5,8 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Migrate dev environment to Plone 6.2.1
+  [remdub]
 
 
 3.0.1 (2026-07-15)
