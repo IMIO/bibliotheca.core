@@ -5,6 +5,17 @@ Changelog
 3.0.2 (unreleased)
 ------------------
 
+- BIBLI-100 : Fix missing markers on the faceted map. The GeoJSON is rendered on
+  ``#faceted-results-items`` while the visible map is ``#faceted-map-container``,
+  and the only bridge between them was ``trigger('leaflet.refresh')``.
+  ``pat-leaflet`` 2.x implements no such event and reads ``data-geojson`` only
+  once at init, from its own element, so the trigger was a silent no-op.
+  Drive the pattern through its own API (``init_geojson()`` on the instance
+  stored as ``el["pattern-leaflet"]``) instead, both on load and after each
+  faceted AJAX query. Same fix for the hover popups, which relied on the
+  equally non-existent ``leaflet.openPopup`` / ``leaflet.closePopup`` events.
+  [boulch]
+
 - Migrate dev environment to Plone 6.2.1
   [remdub]
 

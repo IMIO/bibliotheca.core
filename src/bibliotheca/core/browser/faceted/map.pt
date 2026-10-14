@@ -66,39 +66,124 @@
         </div>
       </div>
       <script type="text/javascript">
+        // The GeoJSON is rendered on #faceted-results-items, but the visible
+        // map is #faceted-map-container (from collective.faceted.map's
+        // viewlet), whose data-geojson is hardcoded empty.
+        //
+        // pat-leaflet 2.x implements no 'leaflet.refresh'/'leaflet.openPopup'
+        // events and reads data-geojson only once, at init, from its own
+        // element - so jQuery .trigger() on those names is a no-op and no
+        // marker is ever drawn. Drive the pattern through its own API instead:
+        // Patternslib stores the instance on the element as
+        // el["pattern-leaflet"] and fires a bubbling 'init.leaflet.patterns'
+        // when init() resolves.
+        (function () {
+          var MAP_SELECTOR = "#faceted-map-container";
+          var DATA_SELECTOR = "#faceted-results-items";
 
-        var refresh_map = function() {
-            var data = $("#faceted-results-items").attr("data-geojson");
-            if ( typeof data != "undefined"  && data ) {
-              data = JSON.parse(data);
-              $('#faceted-map-container').trigger('leaflet.refresh', data);
-              window.dispatchEvent(new Event('resize'));
-        }};
+          function map_element() {
+            return document.querySelector(MAP_SELECTOR);
+          }
 
-        jQuery(document).ready(function($) {
-          
-          $(Faceted.Events).bind(Faceted.Events.AJAX_QUERY_START, function() {
-              $("#faceted-map-container").appendTo($("#viewlet-below-content-body"));
-          });
-          
-          $(Faceted.Events).bind(Faceted.Events.AJAX_QUERY_SUCCESS, function() {
-              $("#faceted-map-container").prependTo($(".eea-preview-items"));
-              refresh_map();
-          });
-          
-          $("#faceted-map-container").prependTo($(".eea-preview-items"));
-          $(".button-map-content").prependTo($(".eea-preview-items"));
-          refresh_map();
-          
-          $('.faceted-map-item').hover(
-            function() {
-              $('#faceted-map-container').trigger('leaflet.openPopup', $(this).data('index'));
-            },
-            function() {
-              $('#faceted-map-container').trigger('leaflet.closePopup', $(this).data('index'));
+          function leaflet_pattern() {
+            var el = map_element();
+            return el ? el["pattern-leaflet"] : null;
+          }
+
+          function read_geojson() {
+            var source = document.querySelector(DATA_SELECTOR);
+            var raw = source && source.getAttribute("data-geojson");
+            if (!raw) {
+              return null;
             }
-          );
-        });
+            try {
+              return JSON.parse(raw);
+            } catch (e) {
+              return null;
+            }
+          }
+
+          // init_geojson() adds the whole GeoJSON layer as one child of
+          // marker_cluster, so flatten one level to reach the markers.
+          function markers_of(pattern) {
+            var markers = [];
+            if (!pattern || !pattern.marker_cluster) {
+              return markers;
+            }
+            pattern.marker_cluster.eachLayer(function (layer) {
+              if (typeof layer.getLatLng === "function") {
+                markers.push(layer);
+              } else if (typeof layer.eachLayer === "function") {
+                layer.eachLayer(function (marker) {
+                  markers.push(marker);
+                });
+              }
+            });
+            return markers;
+          }
+
+          // Clearing first makes this idempotent, so calling it twice (once
+          // eagerly, once on the init event) cannot duplicate markers.
+          function draw_markers() {
+            var pattern = leaflet_pattern();
+            if (!pattern || !pattern.map || !pattern.marker_cluster) {
+              return false;
+            }
+            pattern.marker_cluster.clearLayers();
+            pattern.main_marker = null;
+            var data = read_geojson();
+            if (data && data.features && data.features.length) {
+              pattern.init_geojson(pattern.map, data);
+            }
+            // The container gets moved around in the DOM below; Leaflet needs
+            // to be told its size changed or tiles/bounds go stale.
+            pattern.map.invalidateSize();
+            return true;
+          }
+
+          // Registered before the pattern initialises: this inline script is
+          // parsed with the document, while pat-leaflet instantiates from a
+          // deferred bundle on DOMContentLoaded.
+          document.addEventListener("init.leaflet.patterns", function (event) {
+            if (event.target && event.target.id === "faceted-map-container") {
+              draw_markers();
+            }
+          });
+
+          jQuery(document).ready(function ($) {
+            $(Faceted.Events).bind(Faceted.Events.AJAX_QUERY_START, function () {
+              $(MAP_SELECTOR).appendTo($("#viewlet-below-content-body"));
+            });
+
+            $(Faceted.Events).bind(Faceted.Events.AJAX_QUERY_SUCCESS, function () {
+              $(MAP_SELECTOR).prependTo($(".eea-preview-items"));
+              draw_markers();
+            });
+
+            $(MAP_SELECTOR).prependTo($(".eea-preview-items"));
+            $(".button-map-content").prependTo($(".eea-preview-items"));
+            draw_markers();
+
+            // Delegated, so the handlers survive the AJAX result replacement
+            // that the previous direct .hover() binding did not.
+            $(document).on("mouseenter", ".faceted-map-item", function () {
+              var marker = markers_of(leaflet_pattern())[
+                parseInt($(this).data("index"), 10)
+              ];
+              if (marker) {
+                marker.openPopup();
+              }
+            });
+            $(document).on("mouseleave", ".faceted-map-item", function () {
+              var marker = markers_of(leaflet_pattern())[
+                parseInt($(this).data("index"), 10)
+              ];
+              if (marker) {
+                marker.closePopup();
+              }
+            });
+          });
+        })();
       </script>
 
       <div metal:use-macro="context/batch_macros/macros/navigation"/>
