@@ -10,7 +10,6 @@ from Products.CMFPlone.resources.utils import logger
 from zExceptions import NotFound
 from zope.i18nmessageid import MessageFactory
 
-
 _ = MessageFactory("bibliotheca.core")
 
 
