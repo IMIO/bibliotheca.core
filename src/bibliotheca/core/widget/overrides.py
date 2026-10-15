@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from ..interfaces import IBibliothecaCoreLayer
-
-# from collective.z3cform.select2.widget.widget import SingleSelect2FieldWidget
 from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from z3c.form import interfaces
 

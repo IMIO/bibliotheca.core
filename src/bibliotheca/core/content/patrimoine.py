@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from bibliotheca.core.widget.textdate import TextDateFieldWidget
+from bibliotheca.core.widget.title import TextTitleFieldWidget
 from collections import OrderedDict
 from collective.taxonomy.interfaces import ITaxonomy
 from datetime import datetime
-from bibliotheca.core.widget.textdate import TextDateFieldWidget
-from bibliotheca.core.widget.title import TextTitleFieldWidget
 from plone.app.textfield import RichText
 from plone.app.textfield.value import IRichTextValue
 from plone.app.vocabularies.catalog import CatalogSource

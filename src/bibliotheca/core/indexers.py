@@ -1,6 +1,7 @@
-from plone.indexer import indexer
-from plone.app.discussion.interfaces import IComment
+# -*- coding: utf-8 -*-
 from bibliotheca.core.commentextender import ICommentExtenderFields
+from plone.app.discussion.interfaces import IComment
+from plone.indexer import indexer
 
 
 @indexer(IComment)

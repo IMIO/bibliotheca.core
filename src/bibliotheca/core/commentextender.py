@@ -1,4 +1,4 @@
-from AccessControl import ClassSecurityInfo
+# -*- coding: utf-8 -*-
 from bibliotheca.core.interfaces import IBibliothecaCoreLayer
 from persistent import Persistent
 from plone.app.discussion.browser.comments import CommentForm
@@ -7,14 +7,11 @@ from plone.app.standardtiles import PloneMessageFactory as _
 from plone.namedfile.field import NamedBlobImage
 from plone.namedfile.interfaces import IImageScaleTraversable
 from plone.z3cform.fieldsets import extensible
-from Products.CMFCore.permissions import View
 from z3c.form.field import Fields
 from zope.annotation import factory
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
-
-from zope.annotation.interfaces import IAnnotations
 
 
 class ICommentExtenderFields(Interface):

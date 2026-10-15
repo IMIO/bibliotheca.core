@@ -13,17 +13,14 @@ from plone.app.discussion.interfaces import IComment
 from plone.app.discussion.interfaces import IConversation
 from plone.app.discussion.interfaces import IDiscussionSettings
 from plone.app.discussion.interfaces import IReplies
-from plone.autoform import directives
 from plone.registry.interfaces import IRegistry
 from Products.CMFCore.utils import getToolByName
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 from Products.statusmessages.interfaces import IStatusMessage
 from z3c.form import button
 from z3c.form import field
-from zope.component import queryUtility
 from zope import schema
-
-from bibliotheca.core.commentextender import CommentExtenderFields
+from zope.component import queryUtility
 
 
 class ICommentWithHoneyPot(IComment):
@@ -137,8 +134,4 @@ class CommentsViewlet(baseCommentsViewlet):
     def get_images(self, obj):
         if obj.picture is None:
             return ""
-        extender = CommentExtenderFields(obj)
-        test = extender.get_picture()
-        # import pdb; pdb.set_trace()
-        # image_mini = images.scale(image_field_id,"mini")
         return f"{obj.absolute_url()}/@@images/picture"

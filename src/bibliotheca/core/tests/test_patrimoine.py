@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from bibliotheca.core.content.patrimoine import InvalidFileSizeError
 from bibliotheca.core.content.patrimoine import fileSize
+from bibliotheca.core.content.patrimoine import InvalidFileSizeError
 from bibliotheca.core.testing import BIBLIOTHECA_CORE_INTEGRATION_TESTING
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
-from plone.namedfile.file import NamedBlobFile
 from plone.namedfile.field import NamedFile
+from plone.namedfile.file import NamedBlobFile
 
 import unittest
 

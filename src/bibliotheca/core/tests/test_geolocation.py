@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from collective.geolocationbehavior.geolocation import IGeolocatable
 from bibliotheca.core.testing import BIBLIOTHECA_CORE_INTEGRATION_TESTING
+from collective.geolocationbehavior.geolocation import IGeolocatable
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID

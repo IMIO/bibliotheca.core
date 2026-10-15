@@ -1,9 +1,10 @@
-from zope.component import adapter
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent, IObjectAddedEvent
-
+# -*- coding: utf-8 -*-
 # from plone.app.discussion.comment import Comment
 from bibliotheca.core.commentextender import CommentExtenderFields
 from Products.CMFCore.utils import getToolByName
+from zope.component import adapter
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 
 
 @adapter(CommentExtenderFields, IObjectModifiedEvent)

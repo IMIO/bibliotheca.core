@@ -9,7 +9,7 @@ from z3c.form.converter import FormatterValidationError
 from z3c.form.interfaces import IDataConverter
 from z3c.form.interfaces import IFieldWidget
 from z3c.form.widget import FieldWidget
-from zope.component import adapts
+from zope.component import adapter
 from zope.interface import implementer
 from zope.schema.interfaces import ITextLine
 
@@ -29,11 +29,10 @@ def TextDateFieldWidget(field, request):
     return FieldWidget(field, TextDateWidget(request))
 
 
+@adapter(ITextLine, ITextDateWidget)
 @implementer(IDataConverter)
 class TextDateConverter(BaseDataConverter):
     """Text field, accepting dates only"""
-
-    adapts(ITextLine, ITextDateWidget)
 
     regex_formats = {
         r"\d{8}$": "%d%m%Y",
@@ -49,7 +48,7 @@ class TextDateConverter(BaseDataConverter):
         if value is self.field.missing_value:
             return ""
 
-        if type(value) == date:
+        if type(value) is date:
             return "{v.day:02d}/{v.month:02d}/{v.year}".format(v=value)
         else:
             return value
