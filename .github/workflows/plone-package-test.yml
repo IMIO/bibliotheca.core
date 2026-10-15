@@ -16,6 +16,6 @@ jobs:
       check_path: |
         bibliotheca/core
       coverage_python_version: 3.12
-      python_versions: '["3.12"]'
+      python_versions: '["3.12", "3.13", "3.14"]'
       runner_label: gha-runners-smartweb
       upload_to_coveralls: true
