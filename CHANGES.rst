@@ -5,7 +5,9 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Show the correct title of each map layer on the faceted map.
+  Get the title from the map layers vocabulary, not "Titre".
+  [boulch]
 
 
 3.0.2 (2026-10-15)

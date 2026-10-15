@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from collective.faceted.map.browser.map import MapView
 from plone.api.portal import get_registry_record
+from zope.component import getUtility
+from zope.schema.interfaces import IVocabularyFactory
 
 import json
 
@@ -19,6 +21,9 @@ class FacetedMapView(MapView):
     def map_configuration(self):
         """Returns global map configuration from registry"""
         map_layers = get_registry_record("geolocation.map_layers") or []
+        map_layers_vocabulary = getUtility(
+            IVocabularyFactory, "plone.formwidget.geolocation.vocabularies.map_layers"
+        )(self.context)
         config = {
             "fullscreencontrol": get_registry_record("geolocation.fullscreen_control"),
             "locatecontrol": get_registry_record("geolocation.locate_control"),
@@ -28,7 +33,10 @@ class FacetedMapView(MapView):
             "geosearch": get_registry_record("geolocation.show_geosearch"),
             "geosearch_provider": get_registry_record("geolocation.geosearch_provider"),
             "default_map_layer": get_registry_record("geolocation.default_map_layer"),
-            "map_layers": [{"title": "Titre", "id": layer} for layer in map_layers],
+            "map_layers": [
+                {"title": map_layers_vocabulary.getTerm(layer).title, "id": layer}
+                for layer in map_layers
+            ],
             "latitude": get_registry_record("geolocation.default_latitude"),
             "longitude": get_registry_record("geolocation.default_longitude"),
         }
