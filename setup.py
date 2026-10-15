@@ -15,7 +15,7 @@ long_description = "\n\n".join(
 
 setup(
     name="bibliotheca.core",
-    version="3.0.2",
+    version="3.0.3.dev0",
     description="Core package for Bibliotheca",
     long_description=long_description,
     # Get more from https://pypi.python.org/pypi?%3Aaction=list_classifiers
