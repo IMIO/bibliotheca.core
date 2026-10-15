@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-3.0.3 (unreleased)
+3.0.3 (2026-10-15)
 ------------------
 
 - Do not index the owner data of a patrimoine for the full text search.
