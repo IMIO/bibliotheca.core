@@ -30,12 +30,4 @@
       layer="bibliotheca.core.interfaces.IBibliothecaCoreLayer"
       />
 
-  <!--browser:page
-      for="*"
-      name="faceted-map-geojson"
-      class=".map.FacetedGeoJSON"
-      permission="zope2.View"
-      layer="bibliotheca.core.interfaces.IBibliothecaCoreLayer"
-      /-->
-
 </configure>
