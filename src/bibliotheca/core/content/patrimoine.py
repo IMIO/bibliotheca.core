@@ -10,6 +10,7 @@ from plone.app.textfield.value import IRichTextValue
 from plone.app.vocabularies.catalog import CatalogSource
 from plone.app.z3cform.widget import AjaxSelectFieldWidget
 from plone.autoform import directives as form
+from plone.autoform.interfaces import READ_PERMISSIONS_KEY
 from plone.dexterity.browser import view
 from plone.dexterity.content import Container
 from plone.dexterity.utils import iterSchemata
@@ -17,6 +18,7 @@ from plone.indexer.decorator import indexer
 from plone.namedfile import field as namedfile
 from plone.supermodel import model
 from plone.supermodel.directives import fieldset
+from plone.supermodel.utils import mergedTaggedValueDict
 from Products.CMFPlone.utils import getToolByName
 from Products.CMFPlone.utils import safe_unicode
 from re import match
@@ -499,7 +501,12 @@ def searchabletext_patrimoine(object, **kw):
                     result.append(text)
             continue
 
+        # Fields with a read permission are hidden from visitors (owner data):
+        # do not make them searchable.
+        protected_fields = mergedTaggedValueDict(schemata, READ_PERMISSIONS_KEY)
         for field_name, field_type in getFields(schemata).items():
+            if field_name in protected_fields:
+                continue
             value = getattr(object, field_name, None)
             if isinstance(value, six.text_type):
                 text = value

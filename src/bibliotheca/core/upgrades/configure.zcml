@@ -65,4 +65,13 @@
     />
   </genericsetup:upgradeSteps>
 
+  <genericsetup:upgradeStep
+    source="1005"
+    destination="1006"
+    title="Remove the owner data from the full text index"
+    description="Reindexes the SearchableText of the patrimoine items"
+    profile="bibliotheca.core:default"
+    handler=".upgrades.reindex_patrimoine_searchable_text"
+    />
+
 </configure>

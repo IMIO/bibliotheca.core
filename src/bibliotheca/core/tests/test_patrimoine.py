@@ -3,6 +3,7 @@ from bibliotheca.core.content.patrimoine import fileSize
 from bibliotheca.core.content.patrimoine import InvalidFileSizeError
 from bibliotheca.core.interfaces import IBibliothecaCoreLayer
 from bibliotheca.core.testing import BIBLIOTHECA_CORE_INTEGRATION_TESTING
+from bibliotheca.core.upgrades.upgrades import reindex_patrimoine_searchable_text
 from collective.geolocationbehavior.geolocation import IGeolocatable
 from collective.taxonomy import generated
 from collective.taxonomy.factory import registerTaxonomy
@@ -88,6 +89,25 @@ class TestPatrimoineSearch(unittest.TestCase):
 
     def test_find_by_text_field(self):
         patrimoine = self.create(nature_du_bien="Calvaire")
+        self.assertEqual(self.find("Calvaire"), [patrimoine])
+
+    def test_owner_data_not_searchable(self):
+        # The owner data is hidden from visitors: the search must not reveal
+        # which patrimoine belongs to a person.
+        self.create(
+            owner_name="Jean Dupont",
+            owner_email="jean.dupont@example.org",
+            owner_phone="0471123456",
+        )
+        self.assertEqual(self.find("Dupont"), [])
+        self.assertEqual(self.find("jean.dupont@example.org"), [])
+        self.assertEqual(self.find("0471123456"), [])
+
+    def test_upgrade_reindexes_searchable_text(self):
+        patrimoine = self.create()
+        patrimoine.nature_du_bien = "Calvaire"
+        self.assertEqual(self.find("Calvaire"), [])
+        reindex_patrimoine_searchable_text(self.portal.portal_setup)
         self.assertEqual(self.find("Calvaire"), [patrimoine])
 
     def test_find_by_rich_text_without_html(self):

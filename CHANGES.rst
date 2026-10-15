@@ -5,6 +5,10 @@ Changelog
 3.0.3 (unreleased)
 ------------------
 
+- Do not index the owner data of a patrimoine for the full text search.
+  Upgrade step 1006 reindexes the existing patrimoine items.
+  [boulch]
+
 - Show the correct title of each map layer on the faceted map.
   Get the title from the map layers vocabulary, not "Titre".
   [boulch]

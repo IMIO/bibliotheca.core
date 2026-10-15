@@ -14,3 +14,10 @@ def add_comment_picture_index(context):
         return
     catalog.addIndex("comment_picture", "FieldIndex")
     catalog.reindexIndex("comment_picture", context.REQUEST)
+
+
+def reindex_patrimoine_searchable_text(context):
+    # Remove the owner data from the full text index of the existing items.
+    catalog = api.portal.get_tool("portal_catalog")
+    for brain in catalog.unrestrictedSearchResults(portal_type="patrimoine"):
+        brain._unrestrictedGetObject().reindexObject(idxs=["SearchableText"])
