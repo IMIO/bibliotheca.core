@@ -2,7 +2,7 @@ Changelog
 =========
 
 
-3.0.2 (unreleased)
+3.0.2 (2026-10-15)
 ------------------
 
 - BIBLI-100 : Fix missing markers on the faceted map. The GeoJSON is rendered on
