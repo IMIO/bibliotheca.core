@@ -7,7 +7,6 @@ from bibliotheca.core.commentextender import ICommentExtenderFields
 def comment_picture_indexer(obj):
     # Récupérer l'objet étendu contenant le champ picture
     extender = ICommentExtenderFields(obj, None)
-    # import pdb;pdb.set_trace()
     if extender and extender.picture:
         return extender.picture
     return None

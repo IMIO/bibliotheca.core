@@ -44,7 +44,6 @@ class CommentExtenderFields(Persistent):
         self.picture = value
 
     def get_picture(self):
-        # import pdb;pdb.set_trace()
         return self.picture
 
 
